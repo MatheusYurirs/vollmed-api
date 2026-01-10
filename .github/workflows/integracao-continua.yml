@@ -20,16 +20,10 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Build e sobe containers
-      run: docker compose up -d --build
-
-    - name: Executa testes unitários
-      run: mvn -B verify
-      
-    - name: Gera Relatório Jacoco
-      run: mvn jacoco:prepare-agent verify
-      
-    - name: Analise estática
+    - name: Build, testes, cobertura e Sonar
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn sonar:sonar -Dsonar.projectKey=MatheusYurirs_vollmed-api
+      run: mvn -B clean verify sonar:sonar \
+        -Dsonar.projectKey=MatheusYurirs_vollmed-api \
+        -Dsonar.organization=matheusyurirs \
+        -Dsonar.host.url=https://sonarcloud.io
